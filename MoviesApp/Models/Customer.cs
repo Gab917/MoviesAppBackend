@@ -18,10 +18,10 @@ namespace MoviesApp.Models
         public int CustomerId { get; set; }
 
         [StringLength(50)]
-        public string FirstName { get; set; }
+        public string FullName { get; set; }
 
         [StringLength(50)]
-        public string LastName { get; set; }
+        public string EmailAddress { get; set; }
 
         public int? Age { get; set; }
 

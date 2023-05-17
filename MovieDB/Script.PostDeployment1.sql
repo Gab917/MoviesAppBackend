@@ -9,5 +9,5 @@ Post-Deployment Script Template
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-INSERT INTO dbo.Customer (FirstName,LastName, Age)
-VALUES ('Gabriel','Valiente' ,22);
+INSERT INTO dbo.Customer (FullName,EmailAddress, Age)
+VALUES ('Gabriel Valiente','gabriel.valiente917@gmail.com' ,22);

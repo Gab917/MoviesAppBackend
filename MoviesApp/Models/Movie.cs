@@ -21,12 +21,10 @@ namespace MoviesApp.Models
         [StringLength(50)]
         public string Title { get; set; }
 
-        [StringLength(100)]
         public string Description { get; set; }
 
         [StringLength(50)]
         public string Genre { get; set; }
-
 
         public DateTime? ReleaseDate { get; set; }
 

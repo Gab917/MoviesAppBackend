@@ -2,6 +2,7 @@
 (
 	[RentalId] INT IDENTITY(1,1) NOT NULL PRIMARY KEY,
 	[RentalDate] DATETIME NOT NULL,
+	[ReturnDate] DATETIME NULL,
 	[CustomerId] INT NOT NULL,
 	[MovieId] INT NOT NULL, 
     CONSTRAINT [FK_Rental_Customer] FOREIGN KEY ([CustomerId]) REFERENCES [Customer]([CustomerId]), 

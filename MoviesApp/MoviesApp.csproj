@@ -224,14 +224,18 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\MoviesController.cs" />
+    <Compile Include="Controllers\RentalController.cs" />
     <Compile Include="Controllers\ValuesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Filter.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\MoviesDBContext.cs" />
     <Compile Include="Models\Rental.cs" />
+    <Compile Include="Models\RentMoviesDTO.cs" />
+    <Compile Include="Models\ReturnMoviesDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

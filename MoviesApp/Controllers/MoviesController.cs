@@ -17,18 +17,9 @@ namespace MoviesApp.Controllers
         {
             db = new MoviesDBContext();
         }
-
-        public IHttpActionResult GetMovies()
+        /*
+        public IHttpActionResult GetMovies(int page,int limit,int start)
         {
-            //var movies = db.Movies.ToList();
-            //return Ok(movies);
-
-            /*var movies = db.Movies.Select(m => new {
-                m.Title,
-                m.Description,
-                m.Genre,
-                ReleaseDate = m.ReleaseDate.ToString("yyyy-MM-dd")
-            }).ToList();*/
 
             var movies = db.Movies.ToList()
                 .Select(m => new {
@@ -38,15 +29,116 @@ namespace MoviesApp.Controllers
                     m.Genre,
                     ReleaseDate = m.ReleaseDate.HasValue? m.ReleaseDate.Value.ToString("yyyy-MM-dd") : ""
                 })
+                .OrderBy(m => m.MovieId)
+                .Skip(start)
+                .Take(limit)
                 .ToList();
 
-            return Ok(movies);
+            int total = db.Movies.Count();
 
-            //
+            var result = new
+            {
+                data = movies,
+                total = total
+            };
+
+            return Ok(result);
+
+            
+        }*/
+
+
+
+        /*[HttpGet]
+        public IHttpActionResult GetMovies(int page, int limit, int start,[FromUri] List<Filter> filter)
+        {
+            var query = db.Movies.AsQueryable();
+            
+            if (filter != null && filter.Count > 0)
+            {
+                foreach (var f in filter)
+                {
+                    System.Diagnostics.Debug.WriteLine(f.property + ": "+ f.value);
+                    if (!string.IsNullOrEmpty(f.value))
+                    {
+                        switch (f.property)
+                        {
+                            case "Title":
+                                query = query.Where(m => m.Title.Contains(f.value));
+                                System.Diagnostics.Debug.WriteLine(f.value);
+                                break;
+                            case "Genre":
+                                query = query.Where(m => m.Genre.Contains(f.value));
+                                break;
+                        }
+                    }
+                }
+            }
+
+            var movies = query.ToList()
+                .Select(m => new {
+                    m.MovieId,
+                    m.Title,
+                    m.Description,
+                    m.Genre,
+                    ReleaseDate = m.ReleaseDate.HasValue ? m.ReleaseDate.Value.ToString("yyyy-MM-dd") : ""
+                })
+                .OrderBy(m => m.MovieId)
+                .Skip(start)
+                .Take(limit)
+                .ToList();
+
+            int total = query.Count();
+
+            var result = new
+            {
+                data = movies,
+                total = total
+            };
+
+            return Ok(result);
+        }*/
+        
+        [HttpGet]
+        public IHttpActionResult GetMovies(int page, int limit, int start, string filter = "")
+        {
+            var query = db.Movies.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                query = query.Where(m => m.Title.Contains(filter));
+            }
+
+            var movies = query.ToList()
+                .OrderBy(m => m.MovieId)
+                .Skip(start)
+                .Take(limit)
+                .Select(m => new
+                 {
+                     m.MovieId,
+                     m.Title,
+                     m.Description,
+                     m.Genre,
+                     ReleaseDate = m.ReleaseDate.HasValue ? m.ReleaseDate.Value.ToString("yyyy-MM-dd") : ""
+                 });
+                
+                
+
+            int total = query.Count();
+
+            var result = new
+            {
+                data = movies,
+                total = total
+            };
+
+            return Ok(result);
         }
+        
 
-
-        public IHttpActionResult PostMovie(Movie movie)
+        [HttpPost]
+        //[Route("api/Movies/AddMovie")]
+        public IHttpActionResult PostMovie( [FromBody]Movie movie, string xd = "")
         {
             if (!ModelState.IsValid)
             {
@@ -58,6 +150,8 @@ namespace MoviesApp.Controllers
 
             return CreatedAtRoute("DefaultApi", new { id = movie.MovieId }, movie);
         }
+
+        
 
 
         // PUT api/<controller>/5
@@ -94,7 +188,7 @@ namespace MoviesApp.Controllers
 
 
 
-
+        [HttpDelete]
         public IHttpActionResult DeleteMovie(int id)
         {
             Movie movie = db.Movies.Find(id);

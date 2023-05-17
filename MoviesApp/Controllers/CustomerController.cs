@@ -18,12 +18,40 @@ namespace MoviesApp.Controllers
         }
         // GET api/<controller>
 
-        public IHttpActionResult GetCustomers()
+        public IHttpActionResult GetCustomers(int page, int limit, int start, string filter = "")
         {
-            var customers = db.Customers.ToList();
-            return Ok(customers);
+            var query = db.Customers.AsQueryable();
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                query = query.Where(c => c.FullName.Contains(filter));
+            }
+
+            var customers = query.ToList()
+                .OrderBy(m => m.CustomerId)
+                .Skip(start)
+                .Take(limit)
+                .Select(c => new
+                {
+                    c.CustomerId,
+                    c.FullName,
+                    c.EmailAddress,
+                    c.Age
+                });
 
 
+
+            int total = query.Count();
+
+            var result = new
+            {
+                data = customers,
+                total = total
+            };
+
+            return Ok(result);
+
+            
             
         }
 
@@ -60,8 +88,8 @@ namespace MoviesApp.Controllers
                 return NotFound();
             }
 
-            existingCustomer.FirstName = customer.FirstName;
-            existingCustomer.LastName = customer.LastName;
+            existingCustomer.FullName = customer.FullName;
+            existingCustomer.EmailAddress= customer.EmailAddress;
             existingCustomer.Age = customer.Age;
 
             db.SaveChanges();
